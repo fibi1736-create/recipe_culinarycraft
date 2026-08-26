@@ -1,0 +1,6 @@
+{
+  "name": "CulinaryCraft - Recipe Discovery & Meal Planner",
+  "description": "A modern, premium recipe discovery platform featuring advanced multi-filters, step-by-step interactive cooking mode with live timers, dynamic serving recalculations, categorized shopping lists, and weekly meal planning.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

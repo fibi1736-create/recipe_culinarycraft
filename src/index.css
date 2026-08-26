@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+/* =========================================================
+   Lightweight Micro-Interactions, Progress Loaders & Easing
+   ========================================================= */
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+  }
+}
+
+@keyframes listeningRipple {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 14px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+@keyframes heartPop {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.35);
+  }
+  60% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmerGlint {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes progressPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+.animate-listening-ripple {
+  animation: listeningRipple 1.8s infinite cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.animate-heart-pop {
+  animation: heartPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmerGlint 2.5s infinite;
+}
+
+.ease-spring {
+  transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.15);
+}
+
+.ease-smooth {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* =========================================================
+   Print-Friendly Styles for Recipes and Grocery Checklists
+   ========================================================= */
+@media print {
+  /* Hide non-printable navigation, modals, sidebars, interactive buttons */
+  nav,
+  header#main-navbar,
+  footer,
+  #cooking-mode-modal,
+  #active-timers-modal,
+  #substitute-ingredient-modal,
+  .no-print,
+  button,
+  .btn,
+  select,
+  input,
+  .fixed,
+  .toast {
+    display: none !important;
+  }
+
+  /* Reset layout constraints & colors for crisp black & white ink saving */
+  html, body {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Recipe Container ink-friendly formatting */
+  article[id^="recipe-detail-"] {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+  }
+
+  article[id^="recipe-detail-"] h1 {
+    color: #000000 !important;
+    font-size: 24pt !important;
+    margin-bottom: 8pt !important;
+  }
+
+  article[id^="recipe-detail-"] .text-stone-300,
+  article[id^="recipe-detail-"] .text-stone-400,
+  article[id^="recipe-detail-"] .text-stone-500 {
+    color: #4b5563 !important;
+  }
+
+  /* Avoid cutting instruction steps across page breaks */
+  [id^="instruction-step-"],
+  .print-avoid-break {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 12pt !important;
+  }
+
+  /* Print clean borders instead of heavy shadows */
+  .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
+    box-shadow: none !important;
+  }
+
+  .border, .border-stone-200, .border-stone-100 {
+    border-color: #e5e7eb !important;
+  }
+
+  /* Image control in print */
+  img {
+    max-height: 200px !important;
+    object-fit: cover !important;
+    filter: grayscale(20%);
+  }
+
+  /* Add print header watermark */
+  .print-only {
+    display: block !important;
+  }
+}
+
+.print-only {
+  display: none;
+}
+
+
