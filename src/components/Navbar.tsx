@@ -1,24 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  UtensilsCrossed, 
-  Search, 
-  BookmarkCheck, 
-  Heart, 
-  ShoppingBag, 
-  Timer, 
-  Menu, 
-  X, 
-  Sparkles, 
-  ChefHat, 
-  CalendarDays, 
-  Flame, 
-  Leaf, 
-  Cake, 
-  Coffee, 
-  Globe2, 
-  Clock 
+import {
+  UtensilsCrossed,
+  Search,
+  BookmarkCheck,
+  Heart,
+  ShoppingBag,
+  Timer,
+  Menu,
+  X,
+  Sparkles,
+  ChefHat,
+  CalendarDays,
+  Flame,
+  Leaf,
+  Cake,
+  Coffee,
+  Globe2,
+  Clock,
+  User,
+  LogOut,
+  Plus,
+  Shield
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { ActiveView } from '../types';
 
 interface NavbarProps {
@@ -26,16 +31,18 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenTimers }) => {
-  const { 
-    activeView, 
-    setActiveView, 
-    favorites, 
-    shoppingList, 
-    activeTimers, 
-    filterState, 
+  const {
+    activeView,
+    setActiveView,
+    favorites,
+    shoppingList,
+    activeTimers,
+    filterState,
     setFilterState,
     resetFilters
   } = useApp();
+
+  const { isAuthenticated, isAdmin, userProfile, signOut } = useAuth();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -177,8 +184,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTimers }) => {
               id="nav-favorites-btn"
               onClick={() => navigateTo('favorites')}
               className={`p-2.5 rounded-full transition-colors relative ${
-                activeView === 'favorites' 
-                  ? 'bg-rose-500/20 text-rose-400' 
+                activeView === 'favorites'
+                  ? 'bg-rose-500/20 text-rose-400'
                   : 'text-stone-300 hover:text-rose-400 hover:bg-stone-800'
               }`}
               title="My Favorites & Collections"
@@ -190,6 +197,79 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTimers }) => {
                 </span>
               )}
             </button>
+
+            {/* Auth/Profile Button */}
+            {isAuthenticated ? (
+              <>
+                {/* Profile Button */}
+                <button
+                  id="nav-profile-btn"
+                  onClick={() => navigateTo('profile')}
+                  className={`p-2.5 rounded-full transition-colors ${
+                    activeView === 'profile'
+                      ? 'bg-blue-500/20 text-blue-400'
+                      : 'text-stone-300 hover:text-blue-400 hover:bg-stone-800'
+                  }`}
+                  title="My Profile"
+                >
+                  <User className="w-5 h-5" />
+                </button>
+
+                {/* Submit Recipe Button */}
+                <button
+                  id="nav-submit-btn"
+                  onClick={() => navigateTo('submit')}
+                  className={`p-2.5 rounded-full transition-colors ${
+                    activeView === 'submit'
+                      ? 'bg-green-500/20 text-green-400'
+                      : 'text-stone-300 hover:text-green-400 hover:bg-stone-800'
+                  }`}
+                  title="Submit Recipe"
+                >
+                  <Plus className="w-5 h-5" />
+                </button>
+
+                {/* Admin Dashboard Button */}
+                {isAdmin && (
+                  <button
+                    id="nav-admin-btn"
+                    onClick={() => navigateTo('admin')}
+                    className={`p-2.5 rounded-full transition-colors ${
+                      activeView === 'admin'
+                        ? 'bg-purple-500/20 text-purple-400'
+                        : 'text-stone-300 hover:text-purple-400 hover:bg-stone-800'
+                    }`}
+                    title="Admin Dashboard"
+                  >
+                    <Shield className="w-5 h-5" />
+                  </button>
+                )}
+
+                {/* Sign Out Button */}
+                <button
+                  id="nav-signout-btn"
+                  onClick={signOut}
+                  className="p-2.5 rounded-full transition-colors text-stone-300 hover:text-red-400 hover:bg-stone-800"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </>
+            ) : (
+              /* Login Button */
+              <button
+                id="nav-login-btn"
+                onClick={() => navigateTo('login')}
+                className={`p-2.5 rounded-full transition-colors ${
+                  activeView === 'login'
+                    ? 'bg-amber-500/20 text-amber-300'
+                    : 'text-stone-300 hover:text-amber-300 hover:bg-stone-800'
+                }`}
+                title="Sign In / Sign Up"
+              >
+                <User className="w-5 h-5" />
+              </button>
+            )}
 
             {/* Mobile Hamburger Menu Toggle */}
             <button
@@ -246,6 +326,49 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTimers }) => {
               <ShoppingBag className="w-4 h-4 text-amber-400" />
               <span>Shopping List ({uncompletedShoppingCount})</span>
             </button>
+
+            {isAuthenticated ? (
+              <>
+                <button
+                  onClick={() => navigateTo('profile')}
+                  className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-stone-800 text-stone-200 text-sm font-medium"
+                >
+                  <User className="w-4 h-4 text-blue-400" />
+                  <span>Profile</span>
+                </button>
+                <button
+                  onClick={() => navigateTo('submit')}
+                  className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-stone-800 text-stone-200 text-sm font-medium"
+                >
+                  <Plus className="w-4 h-4 text-green-400" />
+                  <span>Submit Recipe</span>
+                </button>
+                {isAdmin && (
+                  <button
+                    onClick={() => navigateTo('admin')}
+                    className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-stone-800 text-stone-200 text-sm font-medium"
+                  >
+                    <Shield className="w-4 h-4 text-purple-400" />
+                    <span>Admin</span>
+                  </button>
+                )}
+                <button
+                  onClick={signOut}
+                  className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-stone-800 text-stone-200 text-sm font-medium"
+                >
+                  <LogOut className="w-4 h-4 text-red-400" />
+                  <span>Sign Out</span>
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => navigateTo('login')}
+                className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-stone-800 text-stone-200 text-sm font-medium col-span-2"
+              >
+                <User className="w-4 h-4 text-amber-400" />
+                <span>Sign In / Sign Up</span>
+              </button>
+            )}
           </div>
         </div>
       )}

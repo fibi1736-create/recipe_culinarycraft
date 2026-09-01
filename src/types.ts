@@ -144,6 +144,14 @@ export interface Recipe {
   isPopular?: boolean;
   isTrending?: boolean;
   isQuickEasy?: boolean;
+  // New fields for database integration
+  author_id?: string;
+  status?: RecipeStatus;
+  rejection_reason?: string;
+  video_url?: string;
+  created_at?: string;
+  updated_at?: string;
+  published_at?: string;
 }
 
 export interface FilterState {
@@ -247,7 +255,7 @@ export interface VariationsResponse {
   variations: RecipeVariation[];
 }
 
-export type ActiveView = 
+export type ActiveView =
   | 'home'
   | 'recipes'
   | 'recipe-detail'
@@ -261,4 +269,52 @@ export type ActiveView =
   | 'favorites'
   | 'shopping'
   | 'planner'
-  | 'about';
+  | 'about'
+  | 'profile'
+  | 'admin'
+  | 'login'
+  | 'signup'
+  | 'submit';
+
+export type UserRole = 'user' | 'admin';
+
+export type RecipeStatus = 'pending' | 'approved' | 'rejected';
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  full_name: string;
+  avatar_url?: string;
+  role: UserRole;
+  bio?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserActivity {
+  id: string;
+  user_id: string;
+  activity_type: 'recipe_upload' | 'recipe_edit' | 'recipe_delete' | 'like' | 'review' | 'favorite';
+  resource_type: 'recipe' | 'review' | 'comment';
+  resource_id?: string;
+  metadata?: Record<string, any>;
+  created_at: string;
+}
+
+export interface RecipeLike {
+  id: string;
+  user_id: string;
+  recipe_id: string;
+  created_at: string;
+}
+
+export interface AdminDashboardStats {
+  totalUsers: number;
+  totalRecipes: number;
+  pendingRecipes: number;
+  approvedRecipes: number;
+  rejectedRecipes: number;
+  totalLikes: number;
+  totalReviews: number;
+  recentActivities: UserActivity[];
+}

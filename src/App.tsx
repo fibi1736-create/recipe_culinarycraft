@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { CategoryCards } from './components/CategoryCards';
@@ -13,16 +14,25 @@ import { ShoppingListView } from './components/ShoppingListView';
 import { MealPlannerView } from './components/MealPlannerView';
 import { FavoritesView } from './components/FavoritesView';
 import { Footer } from './components/Footer';
+import { UserProfile } from './components/UserProfile';
+import { AdminDashboard } from './components/AdminDashboard';
+import { AuthModal } from './components/AuthModal';
+import { RecipeSubmission } from './components/RecipeSubmission';
 
 const MainAppContent: React.FC = () => {
   const { 
     activeView, 
     selectedRecipe, 
     cookingModeRecipe, 
-    activeTimers 
+    activeTimers,
+    setActiveView 
   } = useApp();
+  
+  const { isAuthenticated, isAdmin } = useAuth();
 
   const [isTimersModalOpen, setIsTimersModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
 
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 font-['Plus_Jakarta_Sans',sans-serif] flex flex-col justify-between selection:bg-amber-500 selection:text-stone-950">
@@ -117,6 +127,48 @@ const MainAppContent: React.FC = () => {
           <RecipeDetail recipe={selectedRecipe} />
         )}
 
+        {/* VIEW 10: USER PROFILE */}
+        {activeView === 'profile' && (
+          <UserProfile />
+        )}
+
+        {/* VIEW 11: ADMIN DASHBOARD */}
+        {activeView === 'admin' && isAdmin && (
+          <AdminDashboard />
+        )}
+
+        {/* VIEW 12: RECIPE SUBMISSION */}
+        {activeView === 'submit' && isAuthenticated && (
+          <RecipeSubmission />
+        )}
+
+        {/* VIEW 13: LOGIN/SIGNUP */}
+        {activeView === 'login' && (
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-4">Authentication</h2>
+              <button
+                onClick={() => {
+                  setAuthMode('login');
+                  setIsAuthModalOpen(true);
+                }}
+                className="px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 mr-2"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => {
+                  setAuthMode('signup');
+                  setIsAuthModalOpen(true);
+                }}
+                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+              >
+                Sign Up
+              </button>
+            </div>
+          </div>
+        )}
+
       </main>
 
       {/* Global Footer */}
@@ -134,14 +186,22 @@ const MainAppContent: React.FC = () => {
         onClose={() => setIsTimersModalOpen(false)}
       />
 
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        defaultMode={authMode}
+      />
+
     </div>
   );
 };
 
 export default function App() {
   return (
-    <AppProvider>
-      <MainAppContent />
-    </AppProvider>
+    <AuthProvider>
+      <AppProvider>
+        <MainAppContent />
+      </AppProvider>
+    </AuthProvider>
   );
 }
