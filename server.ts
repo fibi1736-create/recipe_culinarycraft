@@ -8,7 +8,7 @@ import { createClient } from '@supabase/supabase-js';
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url || 'file://' + __filename);
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
@@ -438,6 +438,7 @@ app.post('/api/recipes', async (req, res) => {
   try {
     const { title, description, cuisine, dietaryType, ingredients } = req.body;
 
+    // @ts-ignore - Supabase type inference issue
     const { data, error } = await supabase
       .from('recipes')
       .insert([
@@ -449,7 +450,7 @@ app.post('/api/recipes', async (req, res) => {
           ingredients,
           created_at: new Date().toISOString()
         }
-      ])
+      ] as any)
       .select();
 
     if (error) {
