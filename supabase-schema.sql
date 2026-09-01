@@ -115,14 +115,7 @@ CREATE TABLE IF NOT EXISTS recipe_variations (
 -- Create index for variation lookups
 CREATE INDEX IF NOT EXISTS idx_variations_recipe ON recipe_variations(recipe_id);
 
--- User Favorites table (for future user authentication)
-CREATE TABLE IF NOT EXISTS user_favorites (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user_id UUID, -- Will be linked to auth.users when auth is implemented
-    recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    UNIQUE(user_id, recipe_id)
-);
+
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
